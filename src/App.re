@@ -120,8 +120,8 @@ let app = () => {
             |> Array.map(contact =>
                  <>
                    //  <Text> {contact##familyName->React.string} </Text>
-                   <Text> {contact##givenName->React.string} </Text>
-                   //  <Text> contact#middleName->React.string </Text>
+                   <Text> contact.givenName->React.string </Text>
+                   <Text> contact.emailAddresses[0].email->React.string </Text>
                  </>
                )
             |> React.array;
