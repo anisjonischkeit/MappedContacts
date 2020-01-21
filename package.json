@@ -12,9 +12,11 @@
     "test": "jest"
   },
   "dependencies": {
+    "bs-react-native-contacts": "https://github.com/anisjonischkeit/bs-react-native-contacts-android-only.git",
     "react": "^16.8.0",
     "react-native": "^0.60.0",
-    "react-native-contacts": "^5.0.6",
+    "react-native-contacts": "https://github.com/anisjonischkeit/react-native-contacts.git",
+    "reason-promise": "^1.0.2",
     "reason-react": "^0.7.0",
     "reason-react-native": "^0.60.0"
   },

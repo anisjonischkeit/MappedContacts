@@ -1471,6 +1471,12 @@ bs-platform@^7.0.1:
   resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-7.0.1.tgz#1d7b0ef6088b998dceee5db74a7cd8f01c20a3bd"
   integrity sha512-UjStdtHhbtC/l6vKJ1XRDqrPk7rFf5PLYHtRX3akDXEYVnTbN36z0g4DEr5mU8S0N945e33HYts9x+i7hKKpZQ==
 
+"bs-react-native-contacts@https://github.com/anisjonischkeit/bs-react-native-contacts-android-only.git":
+  version "0.0.1"
+  resolved "https://github.com/anisjonischkeit/bs-react-native-contacts-android-only.git#6c377bd1dbef096b9eb8b2df55f6d7a4f00623f1"
+  dependencies:
+    react-native-contacts "https://github.com/anisjonischkeit/react-native-contacts.git"
+
 bser@2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/bser/-/bser-2.1.1.tgz#e6787da20ece9d07998533cfd9de6f5c38f4bc05"
@@ -4740,10 +4746,9 @@ react-is@^16.8.1, react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
 
-react-native-contacts@^5.0.6:
+"react-native-contacts@https://github.com/anisjonischkeit/react-native-contacts.git":
   version "5.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-5.0.6.tgz#929aa236eced56ea5662807ce8e9afb4f4bbbfe2"
-  integrity sha512-C0S0/rFxGh8URkxPigeb9ofAa3uzuaz5N++uRZx+p1KLkJItTvWj2eley2n3pA+ziePy4UrjP/W+2yYeUlxSqQ==
+  resolved "https://github.com/anisjonischkeit/react-native-contacts.git#dd15e64f67a781a7bd7e2b274689a2daec15dfc9"
 
 react-native@^0.60.0:
   version "0.60.6"
@@ -4867,6 +4872,11 @@ realpath-native@^1.1.0:
   integrity sha512-wlgPA6cCIIg9gKz0fgAPjnzh4yR/LnXovwuo9hvyGvx3h8nX4+/iLZplfUWasXpqD8BdnGnP5njOFjkUwPzvjA==
   dependencies:
     util.promisify "^1.0.0"
+
+reason-promise@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/reason-promise/-/reason-promise-1.0.2.tgz#22b9bb4097ce511190182b948aef11427d5b8b86"
+  integrity sha512-j8DWV+71wNEKQmyW6zBOowIZq1Qec5CDWyLI37BvgOmAZgRFGFQ1MaJnbhqDe3JsYmaGyqdNMmpCJLl9EDbDAg==
 
 reason-react-native@^0.60.0:
   version "0.60.1"

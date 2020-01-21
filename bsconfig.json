@@ -15,5 +15,10 @@
       "subdirs": true
     }
   ],
-  "bs-dependencies": ["reason-react", "reason-react-native"]
+  "bs-dependencies": [
+    "reason-react",
+    "reason-react-native",
+    "reason-promise",
+    "bs-react-native-contacts"
+  ]
 }

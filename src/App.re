@@ -1,141 +1,78 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Converted from https://github.com/facebook/react-native/blob/724fe11472cb874ce89657b2c3e7842feff04205/template/App.js
- * With a few tweaks
- */
 open ReactNative;
-
-type reactNativeNewAppScreenColors = {
-  .
-  "primary": string,
-  "white": string,
-  "lighter": string,
-  "light": string,
-  "black": string,
-  "dark": string,
-};
-
-[@bs.module "react-native/Libraries/NewAppScreen"]
-external colors: reactNativeNewAppScreenColors = "Colors";
-
-[@bs.module "react-native/Libraries/Core/Devtools/openURLInBrowser"]
-external openURLInBrowser: string => unit = "default";
+open Belt.Result;
 
 module Header = {
   [@react.component] [@bs.module "react-native/Libraries/NewAppScreen"]
   external make: _ => React.element = "Header";
 };
-module ReloadInstructions = {
-  [@react.component] [@bs.module "react-native/Libraries/NewAppScreen"]
-  external make: _ => React.element = "ReloadInstructions";
-};
-module LearnMoreLinks = {
-  [@react.component] [@bs.module "react-native/Libraries/NewAppScreen"]
-  external make: _ => React.element = "LearnMoreLinks";
-};
-module DebugInstructions = {
-  [@react.component] [@bs.module "react-native/Libraries/NewAppScreen"]
-  external make: _ => React.element = "DebugInstructions";
-};
 
-/*
- Here is StyleSheet that is using Style module to define styles for your components
- The main different with JavaScript components you may encounter in React Native
- is the fact that they **must** be defined before being referenced
- (so before actual component definitions)
- More at https://reasonml-community.github.io/reason-react-native/en/docs/apis/Style/
- */
 let styles =
   Style.(
     StyleSheet.create({
-      "scrollView": style(~backgroundColor=colors##lighter, ()),
-      "engine": style(~position=`absolute, ~right=0.->dp, ()),
-      "body": style(~backgroundColor=colors##white, ()),
-      "sectionContainer":
-        style(~marginTop=32.->dp, ~paddingHorizontal=24.->dp, ()),
-      "sectionTitle":
-        style(~fontSize=24., ~fontWeight=`_600, ~color=colors##black, ()),
-      "sectionDescription":
+      "rowText":
         style(
-          ~marginTop=8.->dp,
-          ~fontSize=18.,
-          ~fontWeight=`_400,
-          ~color=colors##dark,
-          (),
-        ),
-      "highlight": style(~fontWeight=`_700, ()),
-      "footer":
-        style(
-          ~color=colors##dark,
-          ~fontSize=12.,
-          ~fontWeight=`_600,
-          ~padding=4.->dp,
-          ~paddingRight=12.->dp,
-          ~textAlign=`right,
+          ~width=100.->pct,
+          ~height=60.->pt,
+          ~textAlignVertical=`center,
+          ~fontSize=16.,
           (),
         ),
     })
   );
 
+let defaultEmptyStr = a =>
+  Js.Nullable.toOption(a)->Belt.Option.getWithDefault("");
+
 [@react.component]
 let app = () => {
   let (contacts, setContacts) = React.useState(() => None);
-
   React.useEffect0(() => {
-    ReactNative.PermissionsAndroid.(
-      requestWithRationale(
-        Permission.readContacts,
-        rationale(~title="the", ~message="mess", ~buttonPositive="butpo", ()),
-      )
-    )
-    |> Js.Promise.then_((status: ReactNative.PermissionsAndroid.Result.t) =>
-         if (status == ReactNative.PermissionsAndroid.Result.granted) {
-           Contacts.getAll(d => {
-             Js.log(d);
-             setContacts(s => Some(d));
-           })
-           |> Js.Promise.resolve;
-         } else {
-           setContacts(s => Some(Error("permissions not granted")))
-           |> Js.Promise.resolve;
-         }
-       )
-    |> ignore;
+    PermissionsAndroid.(request(Permission.readContacts))
+    ->Promise.Js.fromBsPromise
+    ->Promise.Js.toResult
+    ->Promise.getOk((status: ReactNative.PermissionsAndroid.Result.t) =>
+        if (status == ReactNative.PermissionsAndroid.Result.granted) {
+          Contacts.getAll(d => {
+            Js.log(d);
+            setContacts(s => Some(d));
+          });
+        } else {
+          setContacts(s => Some(Error("permissions not granted")));
+        }
+      );
     None;
   });
 
-  Js.log("firss");
+  let handleContactClick = (contact, ()) =>
+    Contacts.viewExistingContact(contact, d => Js.log2("asdasd", d));
+
   <>
-    <StatusBar barStyle=`darkContent />
+    <StatusBar
+      barStyle=`darkContent
+      showHideTransition=`slide
+      backgroundColor="white"
+    />
     <SafeAreaView>
-      <ScrollView
-        contentInsetAdjustmentBehavior=`automatic style={styles##scrollView}>
+      <ScrollView contentInsetAdjustmentBehavior=`automatic>
         Contacts.(
           switch (contacts) {
           | Some(Ok(c)) =>
-            Js.log(c[0]);
             c
             |> Array.map(contact =>
-                 <>
-                   //  <Text> {contact##familyName->React.string} </Text>
-                   <Text> contact.givenName->React.string </Text>
-                   <Text> contact.emailAddresses[0].email->React.string </Text>
-                 </>
+                 <View key={contact.recordID}>
+                   <Text
+                     style=styles##rowText
+                     onPress={handleContactClick(contact)}>
+                     {(contact.givenName ++ " " ++ contact.familyName)
+                      ->React.string}
+                   </Text>
+                 </View>
                )
-            |> React.array;
-          | _ => <Text> "no contacts"->React.string </Text>
+            |> React.array
+          | _ => <Text key="no-contacts"> "no contacts"->React.string </Text>
           }
         )
-        <Text style={styles##highlight}> "React Native"->React.string </Text>
       </ScrollView>
     </SafeAreaView>
-    //<Header />
-    //  {global.HermesInternal == null ? null : (
-    //    <View style={styles##engine}>
-    //      <Text style={styles##footer}>Engine: Hermes</Text>
-    //    </View>
-    //  )}
   </>;
 };
