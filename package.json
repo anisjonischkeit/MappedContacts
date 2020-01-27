@@ -1,5 +1,5 @@
 {
-  "name": "MyApp",
+  "name": "Contacts",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -12,13 +12,20 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/geolocation": "^2.0.2",
+    "bs-fetch": "^0.5.0",
     "bs-react-native-contacts": "https://github.com/anisjonischkeit/bs-react-native-contacts-android-only.git",
+    "geocoder": "^0.2.3",
     "react": "^16.8.0",
     "react-native": "^0.60.0",
     "react-native-contacts": "https://github.com/anisjonischkeit/react-native-contacts.git",
+    "react-native-snackbar": "^2.2.0",
     "reason-promise": "^1.0.2",
     "reason-react": "^0.7.0",
-    "reason-react-native": "^0.60.0"
+    "reason-react-native": "^0.60.0",
+    "request": "^2.88.0",
+    "underscore": "^1.9.2",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",

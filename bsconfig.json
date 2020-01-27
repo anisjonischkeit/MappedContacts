@@ -1,5 +1,5 @@
 {
-  "name": "MyApp",
+  "name": "Contacts",
   "refmt": 3,
   "reason": {
     "react-jsx": 3
@@ -19,6 +19,7 @@
     "reason-react",
     "reason-react-native",
     "reason-promise",
-    "bs-react-native-contacts"
+    "bs-fetch"
+    // "bs-react-native-contacts"
   ]
 }
