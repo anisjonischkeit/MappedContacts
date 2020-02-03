@@ -132,20 +132,7 @@ let app = () => {
             Contacts.getAll(a => Js.log(a));
             let location =
               Geolocation.getCurrentPosition(
-                pos =>
-                  Geocoder.reverseGeocodeStreet(
-                    pos##coords##latitude,
-                    pos##coords##longitude,
-                  )
-                  ->Promise.get(res => {
-                      switch (res) {
-                      | Ok(_) => log("geonames location has been set")
-                      | Error(e) =>
-                        log("unable to get geonames location: " ++ e)
-                      };
-
-                      setLocation(l => Some(res));
-                    }),
+                pos => setLocation(l => Some(pos)),
                 ~onError=
                   e =>
                     log(
@@ -162,17 +149,6 @@ let app = () => {
               );
             ();
           });
-        /* if (status == PermissionsAndroid.Result.granted) {
-             setReady(s
-               => Some(true));
-               /* Contacts.
-                  Contacts.getAll(d => {
-                    Js.log(d);
-                    setContacts(s => Some(d));
-                  }); */
-           } else {
-
-           } */
         None;
       }
     )
@@ -199,8 +175,7 @@ let app = () => {
   let handleAddContactClick = _e => {
     Contacts.openContactForm(Contacts.createContact(), res =>
       switch (res, location) {
-      | (Ok(Some(contact)), Some(Ok(loc))) =>
-        // Contacts.deleteContact(contact);
+      | (Ok(Some(contact)), Some(pos)) =>
         Contacts.addContact(
           {
             ...contact,
@@ -210,20 +185,16 @@ let app = () => {
                 formattedAddress: "",
 
                 street:
-                  loc.intersection.street1
+                  pos##coords##latitude->string_of_float
                   ++ ", "
-                  ++ loc.intersection.cityName
-                  ++ ", "
-                  ++ loc.intersection.adminName1
-                  ++ ", "
-                  ++ loc.intersection.countryCode,
+                  ++ pos##coords##longitude->string_of_float,
                 pobox: "",
                 neighborhood: "",
-                city: "", //loc.intersection.cityName,
-                region: "", //loc.intersection.adminName1,
+                city: "",
+                region: "",
                 state: "",
                 postCode: "",
-                country: "" //loc.intersection.countryCode,
+                country: "",
               },
             |],
           },
