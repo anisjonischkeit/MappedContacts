@@ -1,32 +1,39 @@
 open ReactNative;
 open ReactNativeMaps;
 
-// type region = {
-//   latitude: float,
-//   longitude: float,
-//   latitudeDelta: float,
-//   longitudeDelta: float,
-// };
-// module MV = MapView.Make({type T = ReactNativeMaps.Region.t});
-
 let regionDeltas =
   ReactNativeMaps.Region.create(
     ~latitudeDelta=0.0922,
     ~longitudeDelta=0.0421,
   );
 
-let styles =
-  Style.(StyleSheet.create({"map": StyleSheet.absoluteFillObject}));
+let styles = StyleSheet.create({"map": StyleSheet.absoluteFillObject});
+
+type marker = {
+  latitude: float,
+  longitude: float,
+  title: string,
+};
 
 [@react.component]
-let make = (~navigation, ~route) => {
-  let location = Hooks.useLocation();
-
+let make = (~markers, ~location) => {
   let region =
     switch (location) {
-    | Ok((lat, lon)) => regionDeltas(~latitude=lat, ~longitude=lon)
+    | Hooks.Ok((lat, lon)) => regionDeltas(~latitude=lat, ~longitude=lon)
     | _ => regionDeltas(~latitude=37.78825, ~longitude=-122.4324)
     };
 
-  <MapView region style={styles##map} />;
+  <MapView region style={styles##map}>
+    {markers
+     |> Array.map(marker => {
+          <Marker
+            coordinate={ReactNativeMaps.LatLng.create(
+              marker.latitude,
+              marker.longitude,
+            )}
+            title={marker.title}
+          />
+        })
+     |> React.array}
+  </MapView>;
 };

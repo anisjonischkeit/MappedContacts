@@ -41,37 +41,11 @@ module Log = {
   [@react.component]
   let make = (~rows: array(string)) =>
     <View style=styles##logBox>
-      {
-        rows
-        |> Array.map(log => <Text key=log> log->React.string </Text>)
-        |> React.array
-      }
+      {rows
+       |> Array.map(log => <Text key=log> log->React.string </Text>)
+       |> React.array}
     </View>;
 };
-
-let formatTime =
-  Js.Date.(
-    time => {
-      let fmt = f => time |> f |> int_of_float;
-      let twoDigStrOfInt = i => {
-        let str = string_of_int(i);
-        if (str->String.length == 1) {
-          "0" ++ str;
-        } else {
-          str;
-        };
-      };
-      (fmt(getDate) |> (i => i + 1) |> twoDigStrOfInt)
-      ++ "/"
-      ++ (fmt(getMonth) |> (i => i + 1) |> twoDigStrOfInt)
-      ++ " | "
-      ++ (fmt(getHours) |> twoDigStrOfInt)
-      ++ ":"
-      ++ (fmt(getMinutes) |> twoDigStrOfInt)
-      ++ "."
-      ++ (fmt(getSeconds) |> twoDigStrOfInt);
-    }
-  );
 
 let logContact = (contact: Contacts.contact) =>
   contact.givenName
@@ -90,77 +64,12 @@ module MapBtn = {
 };
 
 [@react.component]
-let make = (~navigation, ~route) => {
-  let (location, setLocation) = React.useState(() => None);
+let make = (~navigation, ~route, ~logger: Hooks.logger, ~location) => {
   let (viewLogsTapCount, setViewLogsTapCount) = React.useState(() => 1);
-  let (ready, setReady) = React.useState(() => None);
-  let (logs, log) = React.useState(() => [||]);
-  let log = (str: string) =>
-    log(currentLogs =>
-      currentLogs
-      |> Array.append([|
-           "> " ++ formatTime(Js.Date.(now() |> fromFloat)) ++ " ... " ++ str,
-         |])
-    );
+  let ready = Hooks.useReady();
 
-  React.useEffect0(() => {
-    open PermissionsAndroid;
-
-    requestMultiple([|
-      Permission.readContacts,
-      Permission.writeContacts,
-      Permission.accessFineLocation,
-    |])
-    ->Promise.Js.fromBsPromise
-    ->Promise.Js.toResult
-    ->Promise.map(res =>
-        switch (res) {
-        | Ok(res) =>
-          switch (
-            res->get(Permission.readContacts),
-            res->get(Permission.writeContacts),
-            res->get(Permission.accessFineLocation),
-          ) {
-          | (Some(rcontacts), Some(wcontacts), Some(location))
-              when
-                rcontacts == Result.granted
-                && wcontacts == Result.granted
-                && location == Result.granted =>
-            setReady(s => Some(true));
-            Ok();
-          | _ =>
-            setReady(s => Some(false));
-            Error();
-          }
-        | Error(_) =>
-          setReady(s => Some(false));
-          Error();
-        }
-      )
-    ->Promise.getOk(_ => {
-        Js.log(5555);
-        Contacts.getAll(a => Js.log(a));
-        let location =
-          Geolocation.getCurrentPosition(
-            pos => setLocation(l => Some(pos)),
-            ~onError=
-              e =>
-                log("An error occured getting geolocation: " ++ e##message),
-            ~options=
-              Geolocation.currentPositionOptions(
-                ~enableHighAccuracy=false,
-                ~timeout=20000.,
-                ~maximumAge=10000.,
-                (),
-              ),
-            (),
-          );
-        ();
-      });
-    None;
-  });
   let report = (text, debugInfo) => {
-    log(text ++ (debugInfo != "" ? " : " ++ debugInfo : ""));
+    logger.log(text ++ (debugInfo != "" ? " : " ++ debugInfo : ""));
     Snackbar.show({
       Snackbar.text,
       Snackbar.duration: Snackbar.obj.lengthLong,
@@ -181,7 +90,7 @@ let make = (~navigation, ~route) => {
   let handleAddContactClick = _e =>
     Contacts.openContactForm(Contacts.createContact(), res =>
       switch (res, location) {
-      | (Ok(Some(contact)), Some(pos)) =>
+      | (Ok(Some(contact)), Hooks.Ok((lat, lon))) =>
         Contacts.addContact(
           {
             ...contact,
@@ -190,10 +99,7 @@ let make = (~navigation, ~route) => {
                 label: "added at",
                 formattedAddress: "",
 
-                street:
-                  pos##coords##latitude->string_of_float
-                  ++ ", "
-                  ++ pos##coords##longitude->string_of_float,
+                street: lat->string_of_float ++ ", " ++ lon->string_of_float,
                 pobox: "",
                 neighborhood: "",
                 city: "",
@@ -225,31 +131,30 @@ let make = (~navigation, ~route) => {
       showHideTransition=`slide
       backgroundColor="white"
     />
-    {
-      switch (ready) {
-      | Some(true) =>
-        <SafeAreaView style=styles##safeAreaView>
-          <View style=styles##topBox>
-            <View style=styles##btn>
-              <Button title="Add Contact" onPress=handleAddContactClick />
-            </View>
-            <View style=styles##btn>
-              <Button title="View Contacts" onPress=handleViewContactsClick />
-            </View>
-            <View style=styles##btn>
-              <MapBtn title="View Map" navigation />
-            </View>
-          </View>
-          <View style=styles##logContainer>
-            <Text onPress=handleViewLogsPress style=styles##secretButton>
-              "........................."->React.string
-            </Text>
-            {viewLogsTapCount mod 5 == 0 ? <Log rows=logs /> : React.null}
-          </View>
-        </SafeAreaView>
-      | Some(false) => <Text> "Permissions not granted"->React.string </Text>
-      | None => React.null
-      }
-    }
+    {switch (ready) {
+     | Some(true) =>
+       <SafeAreaView style=styles##safeAreaView>
+         <View style=styles##topBox>
+           <View style=styles##btn>
+             <Button title="Add Contact" onPress=handleAddContactClick />
+           </View>
+           <View style=styles##btn>
+             <Button title="View Contacts" onPress=handleViewContactsClick />
+           </View>
+           <View style=styles##btn>
+             <MapBtn title="View Map" navigation />
+           </View>
+         </View>
+         <View style=styles##logContainer>
+           <Text onPress=handleViewLogsPress style=styles##secretButton>
+             "........................."->React.string
+           </Text>
+           {viewLogsTapCount mod 5 == 0
+              ? <Log rows={logger.logs} /> : React.null}
+         </View>
+       </SafeAreaView>
+     | Some(false) => <Text> "Permissions not granted"->React.string </Text>
+     | None => React.null
+     }}
   </>;
 };

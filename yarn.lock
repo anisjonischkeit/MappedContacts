@@ -5056,9 +5056,9 @@ reason-react-native@^0.60.0:
   resolved "https://registry.yarnpkg.com/reason-react-native/-/reason-react-native-0.60.1.tgz#eb60dbed6a85ffc4805c08ab4d6a0b551c132c7f"
   integrity sha512-XJJqG62LW9j7YstzAsD20S8t1kH3uVu19/PT5NByceCACq/8oClBLsFXHXhlPvVvdgKvydGjQo+mNb+JCoJ2Kw==
 
-"reason-react-navigation@https://github.com/broerjuang/reason-react-navigation.git#fix-renamed-issue":
-  version "5.0.0-alpha.0"
-  resolved "https://github.com/broerjuang/reason-react-navigation.git#a11cd96baa9111ebc85e50cf2ec65ddee1386f43"
+"reason-react-navigation@https://github.com/reason-react-native/reason-react-navigation#f895fecd4dd81498ca09bb2619ccbf30bc90f3fb":
+  version "5.0.0-beta.0"
+  resolved "https://github.com/reason-react-native/reason-react-navigation#f895fecd4dd81498ca09bb2619ccbf30bc90f3fb"
 
 reason-react@^0.7.0:
   version "0.7.0"

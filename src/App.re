@@ -8,13 +8,21 @@ module ModalScreen = {
 };
 
 module RootStackScreen = {
-  let make = () =>
-    <ReactNavigation.Native.NavigationNativeContainer>
+  let make = () => {
+    let logger = Hooks.useNewLogger();
+    let location = Hooks.useLocation(~log=logger.log);
+
+    <ReactNavigation.Native.NavigationContainer>
       <AppStack.Navigator mode=`modal headerMode=`none>
-        <AppStack.Screen name="Main" component=Home.make />
-        <AppStack.Screen name="Map" component=Map.make />
+        <AppStack.ScreenWithCallback name="Main">
+          {({navigation, route}) => <Home navigation route logger location />}
+        </AppStack.ScreenWithCallback>
+        <AppStack.ScreenWithCallback name="Map">
+          {({navigation, route}) => <MapPage navigation route location />}
+        </AppStack.ScreenWithCallback>
       </AppStack.Navigator>
-    </ReactNavigation.Native.NavigationNativeContainer>;
+    </ReactNavigation.Native.NavigationContainer>;
+  };
 };
 
 let app = RootStackScreen.make;
