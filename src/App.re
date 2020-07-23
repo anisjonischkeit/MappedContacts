@@ -9,19 +9,28 @@ module ModalScreen = {
 
 module RootStackScreen = {
   let make = () => {
+    let ready = Hooks.useReady();
     let logger = Hooks.useNewLogger();
     let location = Hooks.useLocation(~log=logger.log);
 
-    <ReactNavigation.Native.NavigationContainer>
-      <AppStack.Navigator mode=`modal headerMode=`none>
-        <AppStack.ScreenWithCallback name="Main">
-          {({navigation, route}) => <Home navigation route logger location />}
-        </AppStack.ScreenWithCallback>
-        <AppStack.ScreenWithCallback name="Map">
-          {({navigation, route}) => <MapPage navigation route location />}
-        </AppStack.ScreenWithCallback>
-      </AppStack.Navigator>
-    </ReactNavigation.Native.NavigationContainer>;
+    switch (ready) {
+    | Some(true) =>
+      <ReactNavigation.Native.NavigationContainer>
+        <AppStack.Navigator mode=`modal headerMode=`none>
+          <AppStack.ScreenWithCallback name="Main">
+            {(
+               ({navigation, route}) =>
+                 <Home navigation route logger location />
+             )}
+          </AppStack.ScreenWithCallback>
+          <AppStack.ScreenWithCallback name="Map">
+            {(({navigation, route}) => <MapPage navigation route location />)}
+          </AppStack.ScreenWithCallback>
+        </AppStack.Navigator>
+      </ReactNavigation.Native.NavigationContainer>
+    | Some(false) => <Text> "Permissions not granted"->React.string </Text>
+    | None => React.null
+    };
   };
 };
 

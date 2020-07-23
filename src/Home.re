@@ -66,7 +66,6 @@ module MapBtn = {
 [@react.component]
 let make = (~navigation, ~route, ~logger: Hooks.logger, ~location) => {
   let (viewLogsTapCount, setViewLogsTapCount) = React.useState(() => 1);
-  let ready = Hooks.useReady();
 
   let report = (text, debugInfo) => {
     logger.log(text ++ (debugInfo != "" ? " : " ++ debugInfo : ""));
@@ -131,30 +130,22 @@ let make = (~navigation, ~route, ~logger: Hooks.logger, ~location) => {
       showHideTransition=`slide
       backgroundColor="white"
     />
-    {switch (ready) {
-     | Some(true) =>
-       <SafeAreaView style=styles##safeAreaView>
-         <View style=styles##topBox>
-           <View style=styles##btn>
-             <Button title="Add Contact" onPress=handleAddContactClick />
-           </View>
-           <View style=styles##btn>
-             <Button title="View Contacts" onPress=handleViewContactsClick />
-           </View>
-           <View style=styles##btn>
-             <MapBtn title="View Map" navigation />
-           </View>
-         </View>
-         <View style=styles##logContainer>
-           <Text onPress=handleViewLogsPress style=styles##secretButton>
-             "........................."->React.string
-           </Text>
-           {viewLogsTapCount mod 5 == 0
-              ? <Log rows={logger.logs} /> : React.null}
-         </View>
-       </SafeAreaView>
-     | Some(false) => <Text> "Permissions not granted"->React.string </Text>
-     | None => React.null
-     }}
+    <SafeAreaView style=styles##safeAreaView>
+      <View style=styles##topBox>
+        <View style=styles##btn>
+          <Button title="Add Contact" onPress=handleAddContactClick />
+        </View>
+        <View style=styles##btn>
+          <Button title="View Contacts" onPress=handleViewContactsClick />
+        </View>
+        <View style=styles##btn> <MapBtn title="View Map" navigation /> </View>
+      </View>
+      <View style=styles##logContainer>
+        <Text onPress=handleViewLogsPress style=styles##secretButton>
+          "........................."->React.string
+        </Text>
+        {viewLogsTapCount mod 5 == 0 ? <Log rows={logger.logs} /> : React.null}
+      </View>
+    </SafeAreaView>
   </>;
 };

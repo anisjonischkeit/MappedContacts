@@ -2,10 +2,7 @@ open ReactNative;
 open ReactNativeMaps;
 
 let regionDeltas =
-  ReactNativeMaps.Region.create(
-    ~latitudeDelta=0.0922,
-    ~longitudeDelta=0.0421,
-  );
+  ReactNativeMaps.Region.create(~latitudeDelta=0.2, ~longitudeDelta=0.1);
 
 let styles = StyleSheet.create({"map": StyleSheet.absoluteFillObject});
 
@@ -13,6 +10,7 @@ type marker = {
   latitude: float,
   longitude: float,
   title: string,
+  id: string,
 };
 
 [@react.component]
@@ -32,6 +30,7 @@ let make = (~markers, ~location) => {
               marker.longitude,
             )}
             title={marker.title}
+            key={marker.id}
           />
         })
      |> React.array}
