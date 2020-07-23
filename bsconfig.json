@@ -19,7 +19,9 @@
     "reason-react",
     "reason-react-native",
     "reason-promise",
-    "bs-fetch"
+    "bs-fetch",
     // "bs-react-native-contacts"
+    "reason-react-navigation",
+    "reason-react-native-maps"
   ]
 }
