@@ -9,27 +9,24 @@ open ReactNativeMaps;
 // };
 // module MV = MapView.Make({type T = ReactNativeMaps.Region.t});
 
-let regionDeltas = ReactNativeMaps.Region.create(
-    ~latitudeDelta= 0.0922,
-    ~longitudeDelta= 0.0421
+let regionDeltas =
+  ReactNativeMaps.Region.create(
+    ~latitudeDelta=0.0922,
+    ~longitudeDelta=0.0421,
   );
+
+let styles =
+  Style.(StyleSheet.create({"map": StyleSheet.absoluteFillObject}));
 
 [@react.component]
 let make = (~navigation, ~route) => {
   let location = Hooks.useLocation();
 
-  let region = switch(location) {
-    | Ok((lat, lon)) =>regionDeltas(
-        ~latitude= lat,
-        ~longitude= lon,
-      );
-    | _ =>regionDeltas(
-        ~latitude= 37.78825,
-        ~longitude= (-122.4324),
-      );
-  };
+  let region =
+    switch (location) {
+    | Ok((lat, lon)) => regionDeltas(~latitude=lat, ~longitude=lon)
+    | _ => regionDeltas(~latitude=37.78825, ~longitude=-122.4324)
+    };
 
-
-
-  <MapView region />;
+  <MapView region style={styles##map} />;
 };
