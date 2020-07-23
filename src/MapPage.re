@@ -3,7 +3,7 @@ open Contacts;
 open Belt.Array;
 
 [@react.component]
-let make = (~navigation, ~route, ~location) => {
+let make = (~location) => {
   let (contactsData, setContacts) = React.useState(() => None);
   React.useEffect0(() => {
     Contacts.getAllWithoutPhotos(contacts => {

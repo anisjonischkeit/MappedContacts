@@ -18,13 +18,10 @@ module RootStackScreen = {
       <ReactNavigation.Native.NavigationContainer>
         <AppStack.Navigator mode=`modal headerMode=`none>
           <AppStack.ScreenWithCallback name="Main">
-            {(
-               ({navigation, route}) =>
-                 <Home navigation route logger location />
-             )}
+            {(({navigation, route}) => <Home navigation logger location />)}
           </AppStack.ScreenWithCallback>
           <AppStack.ScreenWithCallback name="Map">
-            {(({navigation, route}) => <MapPage navigation route location />)}
+            {(({navigation, route}) => <MapPage location />)}
           </AppStack.ScreenWithCallback>
         </AppStack.Navigator>
       </ReactNavigation.Native.NavigationContainer>

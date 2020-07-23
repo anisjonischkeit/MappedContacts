@@ -64,7 +64,7 @@ module MapBtn = {
 };
 
 [@react.component]
-let make = (~navigation, ~route, ~logger: Hooks.logger, ~location) => {
+let make = (~navigation, ~logger: Hooks.logger, ~location) => {
   let (viewLogsTapCount, setViewLogsTapCount) = React.useState(() => 1);
 
   let report = (text, debugInfo) => {
