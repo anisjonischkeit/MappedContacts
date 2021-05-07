@@ -34,7 +34,7 @@
     "reason-react-native-maps": "^0.26.4",
     "reason-react-navigation": "https://github.com/reason-react-native/reason-react-navigation#f895fecd4dd81498ca09bb2619ccbf30bc90f3fb",
     "request": "^2.88.0",
-    "underscore": "^1.9.2",
+    "underscore": "^1.12.1",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
