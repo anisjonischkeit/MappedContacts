@@ -20,7 +20,7 @@
     "bs-react-native-contacts": "https://github.com/anisjonischkeit/bs-react-native-contacts-android-only.git",
     "geocoder": "^0.2.3",
     "react": "^16.8.0",
-    "react-native": "^0.60.0",
+    "react-native": "^0.62.3",
     "react-native-contacts": "https://github.com/anisjonischkeit/react-native-contacts.git",
     "react-native-gesture-handler": "^1.6.0",
     "react-native-maps": "0.26.1",
